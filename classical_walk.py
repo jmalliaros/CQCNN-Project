@@ -66,45 +66,9 @@ def random_walk(a, i):
     return "%.2gs" % (end - start)
 
 
-def random_walk_iter(a, i, iters):
-    # a -> adj
-    # i -> starting row
-    walk = []  # holds transitions
-    elements = np.arange(a.shape[0])  # for our graph [0,1,2,3]
-    for k in range(iters):
-        c_index = i  # current index for this iteration
-        count = 0  # count of transitions
-        while True:
-            count += 1
-            probs = a[c_index]  # probability of transitions
-            # sample from probs
-            sample = np.random.choice(elements, p=probs)  # sample a target using probs
-            c_index = sample  # go to target
-            if sample == i:  # if target is our initial point
-                walk.append(count)  # stop walking
-                break
-
-    return walk
-
-
-
-
-
-
 if __name__ == '__main__':
-    adj = random_adjacency_matrix(10)
-    print(adj)
-    adj = normalize_row(adj)
-    print(adj)
-    # adj = np.array([
-    #     [0, 1, 1, 0],
-    #     [1, 0, 1, 0],
-    #     [1, 1, 0, 1],
-    #     [0, 0, 1, 0]
-    # ], dtype=np.float32)
-    # adj = normalize_row(adj)
-    # counts = np.unique(random_walk_iter(adj, 0, 1000), return_counts=True)  # perform 1k walks
-    # plt.bar(counts[0], counts[1])
-    # plt.xticks(np.arange(counts[0][-1]), rotation=-60)
-    # plt.show()
-    print(random_walk(adj, 0))
+    for i in range(10):
+        adj = random_adjacency_matrix(10)
+        print(adj)
+        adj = normalize_row(adj)
+        print(random_walk(adj, 0))
