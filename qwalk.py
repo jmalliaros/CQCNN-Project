@@ -3,7 +3,7 @@ from pygame.locals import *
 
 from qtools import *
 from graphs import *
-
+from generate_graphs import random_adjacency_matrix
 # some colors
 BLACK = (0,0,0)
 WHITE = (255,255,255)
@@ -75,13 +75,13 @@ def qwalk_me(A):
 
 		# recalculate probabilities at vertices (if measurement was taken now)
 		prob = [(ampl[i] * ampl[i].conjugate()).real for i in range(num_rows)]
-
+		# print(prob)
 		# recalculate amplitudes to color-codes
 		my_color = [int(prob[i] * 255) for i in range(num_rows)]
 
 		# only use the red spectrum for now (to encode the amplitudes)
 		Color = [(my_color[i],0,0) for i in range(num_rows)]
-
+		print(Color)
 		# draw the edges
 		for edge in G:
 			pygame.draw.line(DISPLAYSURF, BLUE, Vertex[edge[0]], Vertex[edge[1]], thickness)
@@ -116,8 +116,8 @@ def qwalk_me(A):
 ############################################################################
 
 # Step1: defining a graph
-A = randomGraph(3)
-B = randomGraph(3)
+A = random_adjacency_matrix(4)
+# B = randomGraph(3)
 
 # Step 2: run the quantum walk simulation
 qwalk_me(A)

@@ -1,28 +1,5 @@
 import random
 import numpy as np
-import matplotlib.pyplot as plt
-import time
-
-
-def random_adjacency_matrix(n):
-    """
-    creates an nxn symmetric adjacency matrix with 0s along the diagonal
-    used to represent an undirected graph with n nodes
-    :param n: dimension
-    :return: nxn numpy array
-    """
-    matrix = [[random.randint(0, 1) for i in range(n)] for j in range(n)]
-
-    # No vertex connects to itself
-    for i in range(n):
-        matrix[i][i] = 0
-
-    # If i is connected to j, j is connected to i
-    for i in range(n):
-        for j in range(n):
-            matrix[j][i] = matrix[i][j]
-
-    return np.array(matrix)
 
 
 def normalize_row(matrix: np.array):
@@ -38,37 +15,42 @@ def normalize_row(matrix: np.array):
     return matrix
 
 
-def random_walk(a, i):
+def random_walk(matrix, s, e):
     """
     computes the time it takes for a random walk to return to the starting node
-    :param a: adjacency matrix
-    :param i: starting index (starting node)
-    :return: time (s) to return to starting node
+    :param matrix: adjacency matrix
+    :param s: starting index (starting node)
+    :param e: ending index (ending node)
+    :return: number of steps from start to end
     """
-    # a -> adj
-    # i -> starting row
-    walk = []  # holds transitions
-    elements = np.arange(a.shape[0])  # for our graph [0,1,2,3]
-    c_index = i  # current index for this iteration
+    # matrix -> adj matrix
+    # s -> starting row
+    # s -> ending row
+    matrix = normalize_row(matrix)
+    elements = np.arange(matrix.shape[0])  # for our graph [0,1,2,3]
+    c_index = s  # current index for this iteration
     count = 0  # count of transitions
-    start = time.perf_counter()
 
     while True:
         count += 1
-        probs = a[c_index]  # probability of transitions
+        probs = matrix[c_index]  # probability of transitions
         # sample from probs
         sample = np.random.choice(elements, p=probs)  # sample a target using probs
         c_index = sample  # go to target
-        if sample == i:  # if target is our initial point
-            walk.append(count)  # stop walking
-            end = time.perf_counter()
-            break
-    return "%.2gs" % (end - start)
+        if sample == e:  # if target is our ending point
+            return count  # stop walking
+        # return -1 indicating end node cannot be reached
+        # currently set the max count arbitrarily to n^3
+        if count >= pow(len(matrix), 3):
+            return -1
 
 
-if __name__ == '__main__':
-    for i in range(10):
-        adj = random_adjacency_matrix(10)
-        print(adj)
-        adj = normalize_row(adj)
-        print(random_walk(adj, 0))
+# if __name__ == '__main__':
+    # adj = random_adjacency_matrix(15)
+    # ex of case where start 1 cannot reach end 2
+    #  adj = np.array([[0, 1, 0, 1, 0],
+    # [1, 0, 0, 0, 1],
+    # [0, 0, 0, 0, 0],
+    # [1, 0, 0, 0, 1],
+    # [0, 1, 0, 1, 0]])
+    # print(random_walk(adj, 1, 2))

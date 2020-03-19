@@ -6,6 +6,8 @@
 import sys, math, numpy
 import networkx as nx
 import matplotlib.pyplot as plt
+import random
+import numpy as np
 
 #####################################################################################
 # CONVERT GRAPH REPRESENTATION BETWEEN ADJACENCY MATRIX AND LIST
@@ -161,17 +163,4 @@ def completeOrientedGraph(n):
 					A[p][q] = 0-1j
 
 	return A
-#####################################################################################
-# RandomGraph(n):
-# Generates random graphs
-#####################################################################################
-def randomGraph(n):
-	A = numpy.zeros(shape = (n,n))
 
-	for i in range(n):
-
-		for j in range(n):
-			rand = numpy.random.randint(0,2)
-			A[i][j] = float(rand)
-	print(A)
-	return A
