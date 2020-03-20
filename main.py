@@ -4,6 +4,7 @@ import csv
 import os
 from generate_graphs import *
 from classical_walk import random_walk
+from data_handling import AdjData
 
 n = 10
 size = 1000
@@ -28,3 +29,10 @@ def write_csv(graph_data, n):
 if __name__ == '__main__':
     graph_dataset = generate_graph_data(n, size)
     write_csv(graph_dataset, n)
+
+    # data = AdjData(test_size=0.1017)
+    #
+    # X_train = np.matrix(data.X_train.tolist())
+    # Y_train = np.matrix(data.Y_train.tolist())
+    # X_test = np.matrix(data.X_test.tolist())
+    # Y_test = np.matrix(data.Y_test.tolist())
