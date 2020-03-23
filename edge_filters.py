@@ -1,8 +1,8 @@
 import numpy as np 
 import re
 
-#just testing
-data = 'data/graphs_10.csv'
+#uncomment to test
+#data = 'data/graphs_10.csv'
 
 #Getting the matrix dimensions from the file name
 regex = re.compile(r'\d+')
@@ -44,23 +44,19 @@ def edge_to_vertex(F,n):
         Fev[i] = sum_ev(F,n,i) - 2*F[i][i]
     return Fev
 
-   #for i in range 
-
-#Looping through all graphs in data file 
-def edge_to_edge(data_file):
-    length = length_data(data_file)
+#x is the index of the graph in the data file
+def edge_to_edge(data_file,x):
     n = matrix_size(data_file)
     Fee = np.zeros([n,n])
 
-    for x in range(length-950):
-        M = data_to_graph(data_file,x)
-        for i in range(n):
-            for j in range(n):
-                Fee[i][j] = (sum(M,10,i,j) - 2*M[i][j])*M[i][j]
-                Fev = edge_to_vertex(Fee,n)
-        print(Fev)
+    M = data_to_graph(data_file,x)
+    for i in range(n):
+        for j in range(n):
+            Fee[i][j] = (sum(M,10,i,j) - 2*M[i][j])*M[i][j]
+            Fev = edge_to_vertex(Fee,n)
+    #print(Fev)
     return Fev
-        #print("graph:\n", M,"\n", "EtoE filter: \n", Fee, "EtoV filter: \n", Fev)    
 
-print(edge_to_edge(data))
+#uncomment to test,this will return the edge-to-vertex filter for the 4th graph in the dataset.
+#print(edge_to_edge(data,4))
 
