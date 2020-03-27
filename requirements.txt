@@ -2,3 +2,4 @@ numpy
 pygame
 matplotlib
 networkx
+pandas

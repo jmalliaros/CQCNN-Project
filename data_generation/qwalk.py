@@ -1,9 +1,9 @@
-import pygame, sys, math, cmath, numpy
+import pygame
 from pygame.locals import *
 
-from qtools import *
-from graphs import *
-from generate_graphs import random_adjacency_matrix
+from data_generation.qtools import *
+from data_generation.graphs import *
+from data_generation.generate_graphs import random_adjacency_matrix
 # some colors
 BLACK = (0,0,0)
 WHITE = (255,255,255)

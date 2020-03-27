@@ -1,10 +1,13 @@
-Graph generator 
+Phys 490: CQCNN project 
 ======================
 
 ## Dependencies
   run `pip install -r requirements.txt ` to install dependencies
 
-## Generating graph data
+## Data Generation 
+Run code in `data_generation` directory
+
+### Generating graph data
 change variables `n` and `size` for different nxn matrices and data set size in `main.py`
 
 run `python main.py` to generate data saved under `/data`  as `graphs_n.csv`
@@ -15,7 +18,7 @@ Ex. of a 3x3 matrix: `0 1 1 1 0 0 1 0 0 2 3 4 5`
 Note: for graphs that cannot reach the endpoint from the starting point, the count will return `-1`
 
 
-## quantum-walk-on-graphs 
+### quantum-walk-on-graphs 
 Visual Simulation of Quantum Walk on Graphs.
 
 Comments:
@@ -35,3 +38,5 @@ To try the program on another graph, change the line containing
 
   `A = pathGraph(3)`
 
+## Neural Network
+Run code in `neural_net` directory 

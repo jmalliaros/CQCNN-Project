@@ -57,8 +57,4 @@ def generate_graph_data(n, size):
 
 # placeholder function for quantum walk
 def qwalk_count_placeholder(matrix, start, end):
-    return 9
-
-if __name__ == '__main__':
-    data = generate_graph_data(5, 10)
-    print(data)
+    return -2
