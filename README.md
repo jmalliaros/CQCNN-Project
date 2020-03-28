@@ -17,6 +17,10 @@ Ex. of a 3x3 matrix: `0 1 1 1 0 0 1 0 0 2 3 4 5`
 
 Note: for graphs that cannot reach the endpoint from the starting point, the count will return `-1`
 
+### Running main.py
+
+Run `python main.py -d data/graphs_10.csv` to run the main script that calls the model and forms the data
+
 
 ### quantum-walk-on-graphs 
 Visual Simulation of Quantum Walk on Graphs.
