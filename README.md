@@ -44,3 +44,5 @@ To try the program on another graph, change the line containing
 
 ## Neural Network
 Run code in `neural_net` directory 
+
+run CQCNN: `main.py -d <path to data>`
