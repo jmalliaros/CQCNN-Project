@@ -5,10 +5,10 @@ import torch.nn.functional as func
 from neural_net.edge_filters import edge_to_edge, edge_to_vertex
 
 
-class convVert(nn.Module):
+class ConvVert(nn.Module):
     # edge to vertex filter
     def __init__(self):
-        super(convVert, self).__init__()
+        super(ConvVert, self).__init__()
 
     def forward(self, x):
         # shape of x is [batch_size, 1, dim, dim]
@@ -22,10 +22,10 @@ class convVert(nn.Module):
         return result.view(-1, dim)
 
 
-class convSym(nn.Module):
+class ConvSym(nn.Module):
     # deletes symmetric part of all matrices by only keeping lower triangular matrix
     def __init__(self, channels):
-        super(convSym, self).__init__()
+        super(ConvSym, self).__init__()
         self.channels = channels
 
     def forward(self, x):
@@ -37,10 +37,11 @@ class convSym(nn.Module):
                 x[i][j] = x[i][j].tril()
         return x
 
-class convEdge(nn.Module):
+
+class ConvEdge(nn.Module):
     # edge to edge filter layer
     def __init__(self, dim):
-        super(convEdge, self).__init__()
+        super(ConvEdge, self).__init__()
         self.dim = dim
 
     def forward(self, x):
@@ -58,9 +59,9 @@ class Net(nn.Module):
         super(Net, self).__init__()
         self.dim = dim
         self.batch_size = batch_size
-        self.convEdge = convEdge(self.dim)
-        self.convSym = convSym(self.dim)
-        self.convVer = convVert()
+        self.convEdge = ConvEdge(self.dim)
+        self.convSym = ConvSym(self.dim)
+        self.convVer = ConvVert()
         self.fc1 = nn.Linear(dim, 4)
         self.fc2 = nn.Linear(4, 2)
 
