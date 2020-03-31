@@ -3,3 +3,4 @@ pygame
 matplotlib
 networkx
 pandas
+tqdm
