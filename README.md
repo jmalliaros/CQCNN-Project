@@ -31,6 +31,7 @@ Comments:
   1. numpy: for linear algebra (eigenvalues and eigenvectors).
   2. pygame: for graphical visualization (basic drawing routines).
   3. networkx, matplotlib.pyplot: for drawing graphs.
+  4. tqdm, for data generation loading bar
   
 To run: on Linux, type the following on the command line:
 
