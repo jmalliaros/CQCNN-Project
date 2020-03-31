@@ -1,9 +1,9 @@
 import pygame
 from pygame.locals import *
 
-from data_generation.qtools import *
-from data_generation.graphs import *
-from data_generation.generate_graphs import random_adjacency_matrix
+from qtools import *
+from graphs import *
+from generate_graphs import random_adjacency_matrix
 # some colors
 BLACK = (0,0,0)
 WHITE = (255,255,255)
@@ -22,9 +22,12 @@ MY_THICKNESS = 5
 # given a graph G defined by an adjacency matrix A,
 # simulate a quantum walk (running indefinitely) on G
 ############################################################################
-def qwalk_me(A):
+def qwalk_me(A, s, e):
 	# switch graph from matrix to list
 	G = matrixToList(A)
+
+	c_index = s  # current index for this iteration
+	count = 0  # count of transitions
 
 	[num_rows, num_cols] = A.shape
 	assert num_rows == num_cols
@@ -53,7 +56,7 @@ def qwalk_me(A):
 
 	# initialize vertex amplitudes and probabilities
 	ampl = [(1.0 if i == 0 else 0.0) for i in range(num_rows)]
-	prob = [(1.0 if i == 0 else 0.0) for i in range(num_rows)]
+	probs = [(1.0 if i == 0 else 0.0) for i in range(num_rows)]
 
 	# setup the graphics
 	pygame.init()
@@ -66,22 +69,32 @@ def qwalk_me(A):
 	pygame.display.set_caption('Quantum Walk')
 
 	while True:
-		# clear layout for redraw
-		DISPLAYSURF.fill(BLACK)
+		count += 1
+
+		elements = np.arange(A.shape[0])
 
 		# recalculate amplitudes at vertices
 		U = qwalk(A, current_time)
 		ampl = [U[i][0] for i in range(num_rows)]
 
 		# recalculate probabilities at vertices (if measurement was taken now)
-		prob = [(ampl[i] * ampl[i].conjugate()).real for i in range(num_rows)]
+		probs = [(ampl[i] * ampl[i].conjugate()).real for i in range(num_rows)]
+
+		sample = np.random.choice(elements, p=probs)  # sample a target using probs
+		c_index = sample  # go to target
+		if c_index == e:  # if target is our ending point
+			return count  # stop walking
+		# clear layout for redraw
+		DISPLAYSURF.fill(BLACK)
+
+
 		# print(prob)
 		# recalculate amplitudes to color-codes
-		my_color = [int(prob[i] * 255) for i in range(num_rows)]
+		my_color = [int(probs[i] * 255) for i in range(num_rows)]
 
 		# only use the red spectrum for now (to encode the amplitudes)
 		Color = [(my_color[i],0,0) for i in range(num_rows)]
-		print(Color)
+		#print(Color)
 		# draw the edges
 		for edge in G:
 			pygame.draw.line(DISPLAYSURF, BLUE, Vertex[edge[0]], Vertex[edge[1]], thickness)
@@ -116,10 +129,13 @@ def qwalk_me(A):
 ############################################################################
 
 # Step1: defining a graph
-A = random_adjacency_matrix(4)
+A = np.array([[0, 0, 0, 1],
+[0, 0, 1, 1],
+[0, 1, 0, 0],
+[1, 1, 0, 0]])
 # B = randomGraph(3)
 
 # Step 2: run the quantum walk simulation
-qwalk_me(A)
+qwalk_me(A,1,2)
 
 ############################################################################
