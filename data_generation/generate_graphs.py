@@ -31,14 +31,22 @@ def rand_start_end_points(matrix):
     """
     n = len(matrix)
     s, e = random.sample(range(0, n), 2)
-    # can't have starting point on a row without any vertices (i.e. row is all 0s)
-    while not np.any(matrix[s]):
-        s = random.randrange(0, n)
     # can't have start and end to be the same
-    while not np.any(matrix[e]) or e == s:
+    while e == s:
         e = random.randrange(0, n)
     return s, e
 
+
+def far_start_end_points(matrix):
+    """
+    generates start and end points on different ends of matrix
+    :param matrix: adjacency matrix
+    :return: tuple of start and end nodes
+    """
+    n = len(matrix)
+    s = random.randrange(0, n//2 - 1)
+    e = random.randrange(n//2 + 1, n)
+    return s, e
 
 def generate_graph_data(n, size):
     """
@@ -50,11 +58,10 @@ def generate_graph_data(n, size):
     dataset = []
     for i in range(size):
         matrix = random_adjacency_matrix(n)
-        start, end = rand_start_end_points(matrix)
+        # checks if matrix contains n vertices, if list contains False, zeroes row exists,
+        # will need to recreate matrix with n vertices
+        while False in matrix.any(axis=1):
+            matrix = random_adjacency_matrix(n)
+        start, end = far_start_end_points(matrix)
         dataset.append((matrix, start, end))
     return dataset
-
-
-# placeholder function for quantum walk
-def qwalk_count_placeholder(matrix, start, end):
-    return -2
