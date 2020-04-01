@@ -1,5 +1,4 @@
 import pygame
-from pygame.locals import *
 
 from qtools import *
 from graphs import *
@@ -7,128 +6,51 @@ from generate_graphs import random_adjacency_matrix
 
 import matplotlib.pyplot as plt
 
-# some colors
-BLACK = (0,0,0)
-WHITE = (255,255,255)
-RED = (255,0,0)
-GREEN = (0,255,0)
-BLUE = (0,0,255)
-
-# graphics (display/layout) parameters
-WINDOWSIZE = 600
-GRAPHSIZE = WINDOWSIZE/2
-MY_RADIUS = 30
-MY_THICKNESS = 5
-
 pygame_enabled = False
 
 # qwalk_me(A)
 # given a graph G defined by an adjacency matrix A,
 # simulate a quantum walk (running indefinitely) on G
 def qwalk_me(A, s, e):
-	# switch graph from matrix to list
-	G = matrixToList(A)
+    # switch graph from matrix to list
+    G = matrixToList(A)
 
-	c_index = s  # current index for this iteration
-	count = 0  # count of transitions
+    c_index = s  # current index for this iteration
+    count = 0  # count of transitions
 
-	[num_rows, num_cols] = A.shape
-	assert num_rows == num_cols
+    [num_rows, num_cols] = A.shape
+    assert num_rows == num_cols
 
-	if (pygame_enabled == True):
-		# compute placement of vertices (in the 2d layout)
-		hashes = place_graph(G)
+    # start time for quantum walk
+    current_time = 0
+    delta_time = 0.01
 
-		nokeys = [b for a,b in hashes.items()]
+    # initialize vertex amplitudes and probabilities
+    ampl = [(1.0 if i == 0 else 0.0) for i in range(num_rows)]
+    probs = [(1.0 if i == 0 else 0.0) for i in range(num_rows)]
 
-		positions = list(map(lambda x: x.tolist(), nokeys))
+    while True:
+        count += 1
 
-		def scale(x): return int(x*(GRAPHSIZE/2) + (WINDOWSIZE/2))
+        elements = np.arange(A.shape[0])
 
-		Vertex = list(map(lambda p: (scale(p[0]), scale(p[1])), positions))
+        # recalculate amplitudes at vertices
+        U = qwalk(A, current_time)
+        ampl = [U[i][s] for i in range(num_rows)]
 
-		# circle layout of a vertex
-		radius = MY_RADIUS
-		thickness = MY_THICKNESS
-
-		# initialize vertex colors
-		my_color = [0 for i in range(num_rows)]
-
-		# setup the graphics
-		pygame.init()
-
-		FPS = 60
-		fpsClock = pygame.time.Clock()
-
-		# initialize window
-		DISPLAYSURF = pygame.display.set_mode((WINDOWSIZE,WINDOWSIZE),0,32)
-		pygame.display.set_caption('Quantum Walk')
-
-	# start time for quantum walk
-	current_time = 0
-	delta_time = 0.01
-
-	# initialize vertex amplitudes and probabilities
-	ampl = [(1.0 if i == 0 else 0.0) for i in range(num_rows)]
-	probs = [(1.0 if i == 0 else 0.0) for i in range(num_rows)]
-
-	while True:
-		count += 1
-
-		elements = np.arange(A.shape[0])
-
-		# recalculate amplitudes at vertices
-		U = qwalk(A, current_time)
-		ampl = [U[i][s] for i in range(num_rows)]
-
-		# recalculate probabilities at vertices (if measurement was taken now)
-		probs = [(ampl[i] * ampl[i].conjugate()).real for i in range(num_rows)]
+        # recalculate probabilities at vertices (if measurement was taken now)
+        probs = [(ampl[i] * ampl[i].conjugate()).real for i in range(num_rows)]
 
 
-		sample = np.random.choice(elements, p=probs)  # sample a target using probs
-		#print(count,probs, sample)
-		c_index = sample  # go to target
-		if c_index == e:  # if target is our ending point
-			#print('final count', count)
-			return count, probs  # stop walking
-		# clear layout for redraw
+        sample = np.random.choice(elements, p=probs)  # sample a target using probs
+        #print(count,probs, sample)
+        c_index = sample  # go to target
+        if c_index == e:  # if target is our ending point
+            #print('final count', count)
+            return count, probs  # stop walking
+        elif count > 250:
+            return count, probs
 
-		if (pygame_enabled == True):
-			DISPLAYSURF.fill(BLACK)
-
-
-			# print(prob)
-			# recalculate amplitudes to color-codes
-			my_color = [int(probs[i] * 255) for i in range(num_rows)]
-
-			# only use the red spectrum for now (to encode the amplitudes)
-			Color = [(my_color[i],0,0) for i in range(num_rows)]
-			#print(Color)
-			# draw the edges
-			for edge in G:
-				try:
-					pygame.draw.line(DISPLAYSURF, BLUE, Vertex[edge[0]], Vertex[edge[1]], thickness)
-				except IndexError:
-					pass
-
-			# draw the vertices
-			for i in range(len(Vertex)):
-				# boundary
-				pygame.draw.circle(DISPLAYSURF, RED, Vertex[i], 0+radius, radius)
-				# fill
-				pygame.draw.circle(DISPLAYSURF, Color[i], Vertex[i], radius, 0)
-
-			for event in pygame.event.get():
-				if event.type == QUIT:
-					pygame.quit()
-					sys.exit()
-
-			# update display
-			pygame.display.update()
-
-			# update clock
-			fpsClock.tick(FPS)
-
-		# update time
-		current_time += delta_time
+        # update time
+        current_time += delta_time
 
