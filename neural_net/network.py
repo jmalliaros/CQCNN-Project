@@ -60,7 +60,7 @@ class Net(nn.Module):
         self.dim = dim
         self.batch_size = batch_size
         self.convEdge = ConvEdge(self.dim)
-        self.convSym = ConvSym(self.dim)
+        self.convSym = ConvSym(1)
         self.convVer = ConvVert()
         self.fc1 = nn.Linear(dim, 4)
         self.fc2 = nn.Linear(4, 2)
@@ -68,9 +68,9 @@ class Net(nn.Module):
         # Convolutional layer architecture
         self.cnn = nn.Sequential(
             self.convEdge,
+            self.convSym,
             nn.Conv2d(1, 10, 1),
             nn.ReLU(),
-            self.convSym,
             nn.Conv2d(10, 1, 3, 1, 1),
             nn.ReLU(),
             self.convVer,
@@ -91,7 +91,7 @@ class Net(nn.Module):
         for batch_id, (x, y) in enumerate(data.train_loader):
             batch_size = len(y)
             #TODO: 10x10 dim hard coded here, need to change for other dimensions
-            output = self(x.view(-1, 10, 10).float())
+            output = self(x.view(-1, self.dim, self.dim).float())
             # figure out what to do here
 
             optimizer.zero_grad()
@@ -113,7 +113,7 @@ class Net(nn.Module):
             correct = 0
             test_loss = 0
             for features, target in data.test_loader:
-                output = self(features.view(-1, 10, 10).float())
+                output = self(features.view(-1, self.dim, self.dim).float())
                 predict = torch.max(output,1)[1]
                 correct += (predict == target).sum()
                 test_loss += loss(output, target).item()

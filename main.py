@@ -17,8 +17,8 @@ if __name__ == '__main__':
 
     # TODO: refactor hyper parameters to json file
     num_epochs = 10
-    learn_rate = 0.001
-    batch_size = 32
+    learn_rate = 0.002
+    batch_size = 10
 
     # instantiate the data object with a test size of 0.1017 (this can be changed)
     data = AdjData(csv_path=args.data_file, test_size=0.1017, batch_size=batch_size)
