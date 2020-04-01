@@ -7,9 +7,9 @@ import numpy as np
 from tqdm import tqdm
 
 # number of nodes in graph
-n = 10
+nodes = [8]
 # number of graphs
-size = 1000
+size = 4000
 shots = 10
 
 def write_csv(graph_data, n):
@@ -36,13 +36,13 @@ def write_csv(graph_data, n):
             row = graph[0].reshape(-1).tolist() + [graph[1], graph[2], avg_classical_count, avg_quantum_count]
             graph_writer.writerow(row)
 
-            if (avg_classical_count > avg_quantum_count):
-                print(row)
+            # if (avg_classical_count > avg_quantum_count):
+            #     print(row)
 
         pbar.close()
 
 
 if __name__ == '__main__':
-    graph_dataset = generate_graph_data(n, size)
-    write_csv(graph_dataset, n)
-
+    for n in nodes:
+        graph_dataset = generate_graph_data(n, size)
+        write_csv(graph_dataset, n)
