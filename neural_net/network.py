@@ -74,41 +74,50 @@ class Net(nn.Module):
             nn.Conv2d(10, 1, 3, 1, 1),
             nn.ReLU(),
             self.convVer,
-            # TODO: figure out if we need an activiation func here
         )
 
     def forward(self, x):
         x = self.cnn(x)
+        # fully connected layers
         x = self.fc1(x)
         x = func.relu(x)
         x = self.fc2(x)
         return x
 
-    def backprop(self, data, loss_func, epoch, optimizer, display_epoch, display_batch):
-        total_loss = 0
-        correct = 0
+    def backprop(self, data, loss_func, epoch, optimizer, display_epoch, display_batch, v):
+        """
+        back propagation function for model
+        :param data: data class object
+        :param loss_func: loss function
+        :param epoch: current epoch number
+        :param optimizer: optimizer function
+        :param display_epoch: display epoch
+        :param display_batch: display batch
+        :param v: verbosity
+        :return:
+        """
         dataset_len = len(data.train_loader.dataset)
         for batch_id, (x, y) in enumerate(data.train_loader):
             batch_size = len(y)
-            #TODO: 10x10 dim hard coded here, need to change for other dimensions
             output = self(x.view(-1, self.dim, self.dim).float())
-            # figure out what to do here
-
             optimizer.zero_grad()
             output = output.view(-1, 2)
             loss = loss_func(output, y)
             loss.backward()
             optimizer.step()
-            # calculate total correct predictions in current batch
-            predict = torch.max(output.data, 1)[1]
-            correct += (predict == y).sum()
-            total_loss += loss.item()
-            if batch_id % display_batch == 0 and epoch % display_epoch == 0:
+            if batch_id % display_batch == 0 and epoch % display_epoch == 0 and v >= 2:
                 print('Epoch : {} [{}/{} ({:.0f}%)]\tLoss: {:.4f}'.format(
                     epoch, batch_id * batch_size, dataset_len,
                            100 * batch_id * batch_size / dataset_len, loss.data.item()))
 
     def test(self, data, batch_size, loss):
+        """"
+        calculate accuracy and loss on data set
+        :param data: data class object
+        :param batch_size: size of batch
+        :param loss: loss function
+        :return:
+        """
         with torch.no_grad():
             correct = 0
             test_loss = 0

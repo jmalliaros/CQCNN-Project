@@ -7,8 +7,9 @@ import torch.utils.data
 class AdjData:
     def __init__(self, csv_path, test_size, batch_size=1):
         """
+        :param csv_path: specifies the path to the csv file
         :param test_size: specifies the size of the test set (decimal)
-
+        :param batch_size: specifies the size of the batch
         - reads csv data into data frame and splits into data and labels
         - uses scikit learn train_test_split to split into train and test (n=3000) sets
         """

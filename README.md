@@ -1,49 +1,66 @@
 Phys 490: CQCNN project 
 ======================
 
+## Description
+For the Phys 490 final project, the paper "Predicting quantum advantage by quantum walk with convolutional neural networks"
+was chosen as the topic to be recreated. In this repo, random undirected graphs are generated in the form of adjacency matrices
+where a quantum and classical random walk is performed on the graph determining the labels for the graph. A convolutional neural network
+called CQCNN was implemented which takes inputs of adjacency matrices and is trained to classify if random graphs are faster
+with a classical walk or quantum walk.
+
 ## Dependencies
-  run `pip install -r requirements.txt ` to install dependencies
+- numpy
+- pygame
+- matplotlib
+- networkx
+- pandas
+- sklearn
+- tqdm
+- pytorch
+
+ run `pip install -r requirements.txt ` to install dependencies
 
 ## Data Generation 
 Run code in `data_generation` directory
 
 ### Generating graph data
-change variables `n` and `size` for different nxn matrices and data set size in `main.py`
+To generate graph data, in `data_generation` directory, run the `main.py` code:
 
-run `python main.py` to generate data saved under `/data`  as `graphs_n.csv`
+`python main.py -n <number of vertices in graph> -size <size of dataset> -shots <number of shots for walk>`
 
-Data is saved on each row as nxn values representing the matrix, start, end, classical count, quantum count
-Ex. of a 3x3 matrix: `0 1 1 1 0 0 1 0 0 2 3 4 5`
+The data generated is saved under `/data`  as `graphs_n.csv`
 
-Note: for graphs that cannot reach the endpoint from the starting point, the count will return `-1`
+Data is saved on each row where the first n^2 values represent the matrix, and following values represent 
+the start, end, classical count, quantum count
+
+Ex. of a row of a 3x3 matrix: `0 1 1 1 0 0 1 0 0 2 3 4 5`
+
+Note: for graphs that cannot reach the endpoint from the starting point or takes too long, the count will return `-1`
 
 ### Running main.py
 
 Run `python main.py -d data/graphs_10.csv` to run the main script that calls the model and forms the data
 
+Sample: `>python main.py -n 10 -size 1000 -shots 10`
 
-### quantum-walk-on-graphs 
-Visual Simulation of Quantum Walk on Graphs.
+### classical random walk on graphs
 
-Comments:
-- Implemented in python.
-- Required libraries:
-  1. numpy: for linear algebra (eigenvalues and eigenvectors).
-  2. pygame: for graphical visualization (basic drawing routines).
-  3. networkx, matplotlib.pyplot: for drawing graphs.
-  4. tqdm, for data generation loading bar
-  
-To run: on Linux, type the following on the command line:
+To simulate classical random walk on adjacency matrices, the matrices are normalized along the rows which turned
+it into a Markov chain with uniform probability distribution which was sampled from to determine the next step.
 
-  `python qwalk.py`
-  
-The output will be a simulation of a continuous-time quantum walk on a path on three vertices.
+### quantum walk implementation 
 
-To try the program on another graph, change the line containing
+To simulate quantum walk, the code from https://github.com/ctamon/quantum-walk-on-graphs was utilized and modified to
+return the number of steps it took to reach a end node from some starting node
 
-  `A = pathGraph(3)`
 
 ## Neural Network
-Run code in `neural_net` directory 
+To run the Classical-Quantum-Convolutional-Neural-Network (CQCNN) run:
+ 
+`main.py -d <path to csv data> -param <path to json param file> -v <verbosity>`
 
-run CQCNN: `main.py -d <path to data>`
+sample: `python main.py -d data/graphs_8.csv -param param/param_1.json`
+
+For help, use:
+
+`python main.py --h`

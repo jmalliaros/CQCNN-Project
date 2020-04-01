@@ -5,17 +5,20 @@ from classical_walk import random_walk
 from qwalk import qwalk_me
 import numpy as np
 from tqdm import tqdm
+import argparse
 
 # number of nodes in graph
 nodes = [8]
 # number of graphs
-size = 4000
-shots = 10
+# size = 4000
+# shots = 10
 
-def write_csv(graph_data, n):
+
+def write_csv(graph_data, n, size, shots):
     folder_path = os.path.abspath(os.path.join(__file__, "../.."))
     file_path = os.path.join(folder_path, 'data/graphs_{}.csv'.format(n))
-    pbar = tqdm(total=size*shots, ascii=True)#Loading bar
+    # Loading bar
+    pbar = tqdm(total=size*shots, ascii=True)
     with open(file_path, "w", newline='') as f:
         graph_writer = csv.writer(f, delimiter = ' ',)
 
@@ -43,6 +46,15 @@ def write_csv(graph_data, n):
 
 
 if __name__ == '__main__':
-    for n in nodes:
-        graph_dataset = generate_graph_data(n, size)
-        write_csv(graph_dataset, n)
+    # Command line arguments
+    parser = argparse.ArgumentParser(description='Generate n node graph data saved at data/graphs_n.csv')
+    parser.add_argument('-n', default=10, type=int,
+                        help='number of nodes for the graph')
+    parser.add_argument('-size', default=1000, type=int,
+                        help='size of the dataset to generate (default=1000)')
+    parser.add_argument('-shots', default=10, type=int,
+                        help='number of times where quantum and classical walks are repeated for a graph (default=10)')
+    args = parser.parse_args()
+
+    graph_dataset = generate_graph_data(args.n, args.size)
+    write_csv(graph_dataset, args.n, args.size, args.shots)

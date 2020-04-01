@@ -48,6 +48,7 @@ def far_start_end_points(matrix):
     e = random.randrange(n//2 + 1, n)
     return s, e
 
+
 def generate_graph_data(n, size):
     """
     generate adjacency matrix with start and end points

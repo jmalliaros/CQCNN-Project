@@ -1,6 +1,6 @@
 import pandas as pd
-import numpy as np
 
+# Script used to reduce the data size and add more quantum cases to dataset
 num_vertices = [6, 7, 8, 9]
 for vert in num_vertices:
     distant1_df = pd.read_csv(f'../data/graphs1_{vert}.csv', header=None, sep=' ')

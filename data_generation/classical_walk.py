@@ -17,7 +17,7 @@ def normalize_row(matrix: np.array):
 
 def random_walk(matrix, s, e):
     """
-    computes the time it takes for a random walk to return to the starting node
+    computes the steps it takes for a random walk to get from s to e
     :param matrix: adjacency matrix
     :param s: starting index (starting node)
     :param e: ending index (ending node)
@@ -25,9 +25,9 @@ def random_walk(matrix, s, e):
     """
     # matrix -> adj matrix
     # s -> starting row
-    # s -> ending row
+    # e -> ending row
     matrix = normalize_row(matrix)
-    elements = np.arange(matrix.shape[0])  # for our graph [0,1,2,3]
+    elements = np.arange(matrix.shape[0])
     c_index = s  # current index for this iteration
     count = 0  # count of transitions
 
@@ -45,12 +45,3 @@ def random_walk(matrix, s, e):
             return -1
 
 
-# if __name__ == '__main__':
-    # adj = random_adjacency_matrix(15)
-    # ex of case where start 1 cannot reach end 2
-    #  adj = np.array([[0, 1, 0, 1, 0],
-    # [1, 0, 0, 0, 1],
-    # [0, 0, 0, 0, 0],
-    # [1, 0, 0, 0, 1],
-    # [0, 1, 0, 1, 0]])
-    # print(random_walk(adj, 1, 2))

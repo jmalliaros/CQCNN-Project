@@ -5,6 +5,7 @@ from graphs import *
 from generate_graphs import random_adjacency_matrix
 
 import matplotlib.pyplot as plt
+import numpy as np
 
 pygame_enabled = False
 

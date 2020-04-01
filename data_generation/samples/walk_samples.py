@@ -116,5 +116,3 @@ def quantum_walk():
     ax.set_xticklabels(range(-N, N + 1, P // 10))
 
     plt.show()
-if __name__ == '__main__':
-    quantum_walk()

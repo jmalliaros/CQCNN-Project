@@ -18,57 +18,56 @@ def length_data(data_file):
     return len(data)
 
 
-# Getting adjacency matrix of one graph
-# def data_to_graph(train, i, dim):
-#     A = np.reshape(train[i], [dim, dim])
-#     return A
-
-
-# Summation in edge-to-edge filtering
 def sum(M,n,i,j):
+    """
+    Summation in edge-to-edge filtering helper function
+    :param M: matrix
+    :param n: size n
+    :param i: row index
+    :param j: column index
+    :return: matrix
+    """
     x = 0
     for k in range(n):
         x += M[i][k] + M[k][j]
     return x
 
 
-# Summation for edge-to-vertex filtering
 def sum_ev(M,n,i):
+    """
+    Summation for edge-to-vertex filtering helper function
+    :param M: matrix
+    :param n: size n
+    :param i: index
+    :return: matrix
+    """
     x = 0
     for k in range(n):
         x += M[i][k] + M[k][i]
     return x
 
 
-# original implementation of edge to edge and vertex
-# Edge to edge filter, initiate empty array first
-def _edge_to_vertex(F,n):
-    Fev = np.zeros([1,n])[0]
-    for i in range(n):
-        Fev[i] = sum_ev(F,n,i) - 2*F[i][i]
-    return Fev
-
-
-# x is the index of the graph in the data file
-def _edge_to_edge(dim, adj_matrix):
-    Fee = np.zeros([dim, dim])
-    for i in range(dim):
-        for j in range(dim):
-            Fee[i][j] = (sum(adj_matrix,dim,i,j) - 2*adj_matrix[i][j])*adj_matrix[i][j]
-            Fev = edge_to_vertex(Fee,dim)
-    return Fev
-
-
-# Edge to edge filter, initiate empty array first
-def edge_to_vertex(F,n):
+#
+def edge_to_vertex(F, n):
+    """
+    Edge to vertex filter, initiate empty array first
+    :param F: matrix representing graph
+    :param n: number of vertices in graph
+    :return: size nx1 vector representing the sum of each vertex node
+    """
     Fev = torch.zeros([1, n], dtype=torch.float)
     for i in range(n):
         Fev[0][i] = sum_ev(F,n,i) - 2*F[i][i]
     return Fev
 
 
-# x is the index of the graph in the data file
 def edge_to_edge(dim, adj_matrix):
+    """
+    Edge to Edge filter, initiate empty matrix
+    :param dim: number of node vertices in graph
+    :param adj_matrix: adjacency matrix representing graph
+    :return: adjacency matrix
+    """
     Fee = torch.zeros([dim, dim], dtype=torch.float)
     for i in range(dim):
         for j in range(dim):

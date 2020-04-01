@@ -6,19 +6,28 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import numpy as np
+import json
 
 if __name__ == '__main__':
 
     # Command line arguments
-    parser = argparse.ArgumentParser(description='PyTorch Tutorial')
-    parser.add_argument('-d', dest='data_file', metavar='data/graphs_10.csv',
-                        help='data file name')
+    parser = argparse.ArgumentParser(description='Phys 490 Final Project: CQCNN')
+    parser.add_argument('-d', dest='data_file', default='data/graphs_10.csv',
+                        required=True, help='path to csv data file')
+    parser.add_argument('-param', metavar='param.json', required=True, default='param/param_1.json',
+                        help='path to json hyperparameter file')
+    parser.add_argument('-v', type=int, default=2, metavar='N',
+                        help='verbosity (default: 2)')
     args = parser.parse_args()
 
-    # TODO: refactor hyper parameters to json file
-    num_epochs = 10
-    learn_rate = 0.002
-    batch_size = 10
+    # Hyperparameters from json file
+    with open(args.param) as f:
+        param = json.load(f)
+    batch_size = param.get('batch_size', 10)
+    num_epochs = param.get('epochs', 1)
+    display_batch = param.get('display_batch', batch_size)
+    display_epoch = param.get('display_epoch', 1)
+    learn_rate = param.get('learning_rate', 0.001)
 
     # instantiate the data object with a test size of 0.1017 (this can be changed)
     data = AdjData(csv_path=args.data_file, test_size=0.1017, batch_size=batch_size)
@@ -33,7 +42,7 @@ if __name__ == '__main__':
 
     CQCNN.train()
     for epoch in range(num_epochs):
-        CQCNN.backprop(data, loss_func, epoch+1, optimizer, 1, 1)
+        CQCNN.backprop(data, loss_func, epoch+1, optimizer, display_epoch, display_batch, args.v)
 
     # test
     CQCNN.eval()

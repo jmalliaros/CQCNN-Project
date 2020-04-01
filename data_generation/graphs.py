@@ -7,7 +7,6 @@ import sys, math, numpy
 import networkx as nx
 import matplotlib.pyplot as plt
 import random
-import numpy as np
 
 #####################################################################################
 # CONVERT GRAPH REPRESENTATION BETWEEN ADJACENCY MATRIX AND LIST
