@@ -37,11 +37,7 @@ Ex. of a row of a 3x3 matrix: `0 1 1 1 0 0 1 0 0 2 3 4 5`
 
 Note: for graphs that cannot reach the endpoint from the starting point or takes too long, the count will return `-1`
 
-### Running main.py
-
-Run `python main.py -d data/graphs_10.csv` to run the main script that calls the model and forms the data
-
-Sample: `>python main.py -n 10 -size 1000 -shots 10`
+Sample: `python main.py -n 10 -size 1000 -shots 10`
 
 ### classical random walk on graphs
 
